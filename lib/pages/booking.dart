@@ -306,4 +306,18 @@ class _BookingPageState extends State<BookingPage> {
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.lightBlue[300],
                       padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                      textStyle: TextStyle
+                      textStyle: TextStyle(fontSize: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
