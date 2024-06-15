@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gotravel/pages/notif.dart';
 import 'package:gotravel/pages/payment.dart';
 
+// Definisi StatefulWidget untuk halaman booking
 class BookingPage extends StatefulWidget {
   final Map<String, dynamic> destination;
 
@@ -17,6 +18,7 @@ class _BookingPageState extends State<BookingPage> {
   bool _isFlexible = false;
   DateTime _today = DateTime.now();
 
+  // Fungsi untuk menangani pemilihan tanggal
   void _onDateSelected(DateTime date) {
     if (date.isBefore(_today)) return;
 
@@ -33,6 +35,7 @@ class _BookingPageState extends State<BookingPage> {
     }
   }
 
+  // Fungsi untuk membangun kalender
   List<Widget> _buildCalendar(DateTime month) {
     final List<Widget> days = [];
 
@@ -40,16 +43,12 @@ class _BookingPageState extends State<BookingPage> {
     final DateTime lastDayOfMonth = DateTime(month.year, month.month + 1, 0);
     final int daysInMonth = lastDayOfMonth.day;
 
+    // Daftar nama hari dalam seminggu
     final List<String> weekdays = [
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun'
+      'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
     ];
 
+    // Menambahkan nama hari ke kalender
     for (String weekday in weekdays) {
       days.add(
         Container(
@@ -63,21 +62,16 @@ class _BookingPageState extends State<BookingPage> {
       );
     }
 
+    // Mengisi kalender dengan tanggal-tanggal
     for (int i = 0; i < firstDayOfMonth.weekday - 1; i++) {
       days.add(Container());
     }
 
     for (int i = 1; i <= daysInMonth; i++) {
       final DateTime date = DateTime(month.year, month.month, i);
-      bool isSelected =
-          (date == _selectedStartDate || date == _selectedEndDate);
-      bool rangeSelected = (_selectedStartDate != null &&
-          _selectedEndDate != null &&
-          date.isAfter(_selectedStartDate!) &&
-          date.isBefore(_selectedEndDate!));
-      bool isToday = date.day == _today.day &&
-          date.month == _today.month &&
-          date.year == _today.year;
+      bool isSelected = (date == _selectedStartDate || date == _selectedEndDate);
+      bool rangeSelected = (_selectedStartDate != null && _selectedEndDate != null && date.isAfter(_selectedStartDate!) && date.isBefore(_selectedEndDate!));
+      bool isToday = date.day == _today.day && date.month == _today.month && date.year == _today.year;
       bool isPast = date.isBefore(_today);
       bool isHoliday = _isHoliday(date);
 
@@ -118,10 +112,12 @@ class _BookingPageState extends State<BookingPage> {
     return days;
   }
 
+  // Fungsi untuk menentukan apakah tanggal adalah hari libur
   bool _isHoliday(DateTime date) {
     return date.weekday == DateTime.sunday;
   }
 
+  // Fungsi untuk membangun tampilan kalender bulanan
   Widget _buildMonthCalendar(String monthName, DateTime month) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,6 +147,7 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
+  // Fungsi untuk membangun switch kustom
   Widget _customSwitch(bool value) {
     return GestureDetector(
       onTap: () {
@@ -193,6 +190,7 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
+  // Fungsi build untuk membangun tampilan halaman
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,8 +284,7 @@ class _BookingPageState extends State<BookingPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      if (_selectedStartDate != null &&
-                          _selectedEndDate != null) {
+                      if (_selectedStartDate != null && _selectedEndDate != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -308,20 +305,5 @@ class _BookingPageState extends State<BookingPage> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.lightBlue[300],
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                      textStyle: TextStyle(fontSize: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+                      padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                      textStyle: TextStyle
