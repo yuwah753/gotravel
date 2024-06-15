@@ -4,24 +4,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gotravel/pages/home.dart';
 
 class SignUpPage extends StatefulWidget {
+  // Class untuk halaman pendaftaran
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
-  final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  final _formKey = GlobalKey<FormState>(); // Key untuk form validasi
+  final _nameController = TextEditingController(); // Controller untuk text field nama
+  final _emailController = TextEditingController(); // Controller untuk text field email
+  final _passwordController = TextEditingController(); // Controller untuk text field password
+  bool _isPasswordVisible = false; // Status visibility untuk password
+  final _auth = FirebaseAuth.instance; // Instance Firebase Authentication
+  final _firestore = FirebaseFirestore.instance; // Instance Firestore
 
   Future<void> _signUp() async {
-    if (_formKey.currentState!.validate()) {
+    // Fungsi untuk menangani proses pendaftaran
+    if (_formKey.currentState!.validate()) { // Validasi form
       try {
-        UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
+        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
@@ -39,21 +40,23 @@ class _SignUpPageState extends State<SignUpPage> {
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } on FirebaseAuthException catch (e) {
+        // Menangani error dari Firebase Authentication
         if (e.code == 'weak-password') {
-          _showDialog('Password is too weak.');
+          _showDialog('Password terlalu lemah.');
         } else if (e.code == 'email-already-in-use') {
-          _showDialog('The account already exists for that email.');
+          _showDialog('Email tersebut sudah terdaftar.');
         } else {
-          _showDialog('An error occurred. Please try again.');
+          _showDialog('Terjadi kesalahan. Silahkan coba lagi.');
         }
       } catch (e) {
         print(e);
-        _showDialog('An error occurred. Please try again.');
+        _showDialog('Terjadi kesalahan. Silahkan coba lagi.');
       }
     }
   }
 
   void _showDialog(String message) {
+    // Fungsi untuk menampilkan dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -75,6 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Menghilangkan resize pada bottom inset (keyboard)
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Padding(
@@ -88,142 +92,25 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.min, // Batasi ukuran minimum kolom
                 children: [
                   Text(
-                    'Sign up now',
+                    'Daftar Sekarang',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
-                  Wrap(alignment: WrapAlignment.center, children: [
-                    Text('Please fill the details and create account',
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Text(
+                        'Silahkan isi detail dan buat akun',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.grey, fontFamily: 'ABeeZee')),
-                  ]),
+                        style: TextStyle(color: Colors.grey, fontFamily: 'ABeeZee'),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      hintText: 'Name',
-                      filled: true,
-                      fillColor: Color(0xFFF7F7F9),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Name cannot be empty';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      filled: true,
-                      fillColor: Color(0xFFF7F7F9),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email cannot be empty';
-                      }
-                      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                      if (!emailRegex.hasMatch(value)) {
-                        return 'Enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: !_isPasswordVisible,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      filled: true,
-                      fillColor: Color(0xFFF7F7F9),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Password cannot be empty';
-                      }
-                      if (value.length < 8) {
-                        return 'Password must be at least 8 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 30),
-                  TextButton(
-                    onPressed: () {
-                      _signUp();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text('Sign Up',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'ABeeZee')),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account?",
-                          style: TextStyle(
-                              color: Colors.grey, fontFamily: 'ABeeZee')),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Sign in',
-                          style: TextStyle(
-                              color: Colors.orange, fontFamily: 'ABeeZee'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+                      hintText
