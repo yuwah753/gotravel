@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gotravel/pages/booking.dart';
 
+// Definisi StatelessWidget untuk halaman detail destinasi
 class DetailPage extends StatelessWidget {
   final Map<String, dynamic> destination;
 
@@ -9,10 +10,10 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true, // Membuat body berada di belakang AppBar
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.transparent, // Membuat AppBar transparan
+        elevation: 0, // Menghilangkan bayangan pada AppBar
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -20,7 +21,7 @@ class DetailPage extends StatelessWidget {
             size: 20,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Navigasi kembali ke halaman sebelumnya
           },
         ),
         title: Text(
@@ -28,7 +29,7 @@ class DetailPage extends StatelessWidget {
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        centerTitle: true,
+        centerTitle: true, // Menjadikan judul di tengah
         actions: [
           Padding(
             padding: const EdgeInsets.all(7.0),
@@ -36,7 +37,7 @@ class DetailPage extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: ShapeDecoration(
-                color: Color.fromARGB(27, 30, 40, 1),
+                color: Color.fromARGB(27, 30, 40, 1), // Warna latar belakang bookmark
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -54,6 +55,7 @@ class DetailPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
+          // Gambar destinasi di posisi atas
           Positioned(
             left: 0,
             top: 0,
@@ -62,8 +64,8 @@ class DetailPage extends StatelessWidget {
               height: 350,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(destination['image']),
-                  fit: BoxFit.cover,
+                  image: NetworkImage(destination['image']), // Menampilkan gambar destinasi
+                  fit: BoxFit.cover, // Menyesuaikan gambar dengan ukuran kotak
                 ),
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(30),
@@ -71,6 +73,7 @@ class DetailPage extends StatelessWidget {
               ),
             ),
           ),
+          // DraggableScrollableSheet untuk menampilkan detail destinasi
           DraggableScrollableSheet(
             initialChildSize: 0.6,
             minChildSize: 0.6,
@@ -84,6 +87,7 @@ class DetailPage extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
+                    // Garis kecil di atas untuk indikasi draggable
                     Center(
                       child: Container(
                         width: 50,
@@ -95,12 +99,14 @@ class DetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Konten detail destinasi
                     Expanded(
                       child: SingleChildScrollView(
                         controller: scrollController,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Nama destinasi
                             Row(
                               children: [
                                 Expanded(
@@ -114,6 +120,7 @@ class DetailPage extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            // Alamat destinasi
                             Text(
                               "${destination['address']}",
                               style: TextStyle(
@@ -123,6 +130,7 @@ class DetailPage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 40),
+                            // Informasi lokasi, rating, dan harga
                             Row(
                               children: [
                                 Icon(Icons.location_on_outlined,
@@ -150,6 +158,7 @@ class DetailPage extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 20),
+                            // Bagian tentang destinasi
                             Text(
                               'About Destination',
                               style: TextStyle(
@@ -158,6 +167,7 @@ class DetailPage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 10),
+                            // Deskripsi destinasi
                             Text(
                               destination['description'],
                               style: TextStyle(color: Colors.grey),
@@ -172,6 +182,7 @@ class DetailPage extends StatelessWidget {
               );
             },
           ),
+          // Tombol "Book Now" di bagian bawah layar
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -182,7 +193,7 @@ class DetailPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            BookingPage(destination: destination)),
+                            BookingPage(destination: destination)), // Navigasi ke halaman BookingPage
                   );
                 },
                 child: Text('Book Now'),
